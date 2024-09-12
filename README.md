@@ -10,30 +10,30 @@ Optimized Distance-Weighted Neighborhood Component Analysis (DW-NCA) is an advan
 
 The objective function for DW-NCA is given by:
 
-$\text{Objective}(A) = \sum_{i \neq j} \text{Weight}_{ij} \cdot \exp(-\text{Distance}_{ij})$
+$$\text{Objective}(A) = \sum_{i \neq j} \text{Weight}_{ij} \cdot \exp(-\text{Distance}_{ij})$$
 
 where:
 
-- \(\text{Weight}_{ij}\) is the weight based on distance between data points \(i\) and \(j\).
-- \(\text{Distance}_{ij}\) is the pairwise squared distance between the transformed data points \(i\) and \(j\).
+- $`\text{Weight}_{ij}`$ is the weight based on distance between data points $`i`$ and $`j`$.
+- $`\text{Distance}_{ij}`$ is the pairwise squared distance between the transformed data points $`i`$ and $`j`$.
 
 The weights are computed as:
 
-$\text{Weight}_{ij} = \frac{1}{1 + \text{Distance}_{ij}}$
+$$\text{Weight}_{ij} = \frac{1}{1 + \text{Distance}_{ij}}$$
 
 ### Gradient Computation
 
 The gradient of the objective function is used for optimization and is computed as:
 
-$\text{Gradient} = \frac{\partial}{\partial A} \text{Objective}(A)$
+$$\text{Gradient} = \frac{\partial}{\partial A} \text{Objective}(A)$$
 
-The gradient is used to update the transformation matrix \(A\) during optimization.
+The gradient is used to update the transformation matrix $`A`$ during optimization.
 
 ## Implementation
 
 ### DistanceWeightedNCA
 
-The `DistanceWeightedNCA` class in the `optimized_dw_nca` package performs the optimization of the transformation matrix \(A\) using gradient-based methods. Key parameters include:
+The `DistanceWeightedNCA` class in the `optimized_dw_nca` package performs the optimization of the transformation matrix $`A`$ using gradient-based methods. Key parameters include:
 
 - `n_components`: Number of components for the transformation.
 - `max_iter`: Maximum number of iterations for the optimization.
