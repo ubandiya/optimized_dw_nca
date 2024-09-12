@@ -10,7 +10,7 @@ Optimized Distance-Weighted Neighborhood Component Analysis (DW-NCA) is an advan
 
 The objective function for DW-NCA is given by:
 
-\[ \text{Objective}(A) = \sum_{i \neq j} \text{Weight}_{ij} \cdot \exp(-\text{Distance}_{ij}) \]
+$ \text{Objective}(A) = \sum_{i \neq j} \text{Weight}_{ij} \cdot \exp(-\text{Distance}_{ij}) $
 
 where:
 
@@ -19,13 +19,13 @@ where:
 
 The weights are computed as:
 
-\[ \text{Weight}_{ij} = \frac{1}{1 + \text{Distance}_{ij}} \]
+$ \text{Weight}_{ij} = \frac{1}{1 + \text{Distance}_{ij}} $
 
 ### Gradient Computation
 
 The gradient of the objective function is used for optimization and is computed as:
 
-\[ \text{Gradient} = \frac{\partial}{\partial A} \text{Objective}(A) \]
+$ \text{Gradient} = \frac{\partial}{\partial A} \text{Objective}(A) $
 
 The gradient is used to update the transformation matrix \(A\) during optimization.
 
