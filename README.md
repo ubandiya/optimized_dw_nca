@@ -19,7 +19,7 @@ where:
 
 The weights are computed as:
 
-$`\text{Weight}_{ij} = \frac{1}{1 + \text{Distance}_{ij}`$
+$`\text{Weight}_{ij} = \frac{1}{1 + \text{Distance}_{ij}}`$
 
 ### Gradient Computation
 
