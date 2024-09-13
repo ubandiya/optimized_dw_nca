@@ -3,11 +3,12 @@
 import numpy as np
 import time
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier, NeighborhoodComponentsAnalysis
 from sklearn.pipeline import Pipeline
 from sklearn.datasets import load_iris, load_wine, load_breast_cancer
 from sklearn.preprocessing import StandardScaler
-from optimized_dw_nca import DistanceWeightedNCA, DWNCA_KNNClassifier
+from optimized_dw_nca import DistanceWeightedNCA
+from optimized_dw_nca.knn_classifier import DWNCA_KNNClassifier
 from optimized_dw_nca.metrics import PerformanceMetrics
 
 def load_datasets():
@@ -28,31 +29,11 @@ def load_datasets():
 
 def compare_methods(X, y, test_size=0.3, n_components=None, n_neighbors=3, cv=5):
     """
-    Compare traditional NCA and DW-NCA on a given dataset.
-
-    Parameters:
-    ----------
-    X : array-like, shape (n_samples, n_features)
-        Feature matrix.
-    y : array-like, shape (n_samples,)
-        Target vector.
-    test_size : float, optional (default=0.3)
-        Proportion of the dataset to include in the test split.
-    n_components : int or None, optional (default=None)
-        Number of components for dimensionality reduction. If None, uses the number of features.
-    n_neighbors : int, optional (default=3)
-        Number of neighbors to use for KNeighborsClassifier.
-    cv : int, optional (default=5)
-        Number of folds in cross-validation.
-
-    Returns:
-    -------
-    results : dict
-        Dictionary with performance metrics for NCA and DW-NCA.
+    Compare traditional NCA and DW-NCA on a given dataset with tuning.
     """
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
 
-    # Traditional NCA
+    # Traditional NCA with scaling
     start_time = time.time()
     nca_pipeline = Pipeline([
         ('scaler', StandardScaler()),
@@ -63,20 +44,23 @@ def compare_methods(X, y, test_size=0.3, n_components=None, n_neighbors=3, cv=5)
     nca_time = time.time() - start_time
     nca_pred = nca_pipeline.predict(X_test)
 
-    # DW-NCA
+    # DW-NCA with scaling
     start_time = time.time()
-    dwnca_clf = DWNCA_KNNClassifier(n_neighbors=n_neighbors, n_components=n_components)
-    dwnca_clf.fit(X_train, y_train)
+    dwnca_pipeline = Pipeline([
+        ('scaler', StandardScaler()),  # Ensure data is scaled
+        ('dwnca_knn', DWNCA_KNNClassifier(n_neighbors=n_neighbors, n_components=n_components))
+    ])
+    dwnca_pipeline.fit(X_train, y_train)
     dwnca_time = time.time() - start_time
-    dwnca_pred = dwnca_clf.predict(X_test)
+    dwnca_pred = dwnca_pipeline.predict(X_test)
 
     # Performance metrics
     nca_metrics = PerformanceMetrics(y_test, nca_pred)
     dwnca_metrics = PerformanceMetrics(y_test, dwnca_pred)
 
-    # Cross-validation scores
+    # Cross-validation scores with scaling
     nca_cv_scores = cross_val_score(nca_pipeline, X, y, cv=cv)
-    dwnca_cv_scores = cross_val_score(dwnca_clf, X, y, cv=cv)
+    dwnca_cv_scores = cross_val_score(dwnca_pipeline, X, y, cv=cv)
 
     return {
         'NCA': {
